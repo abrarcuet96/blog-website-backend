@@ -21,11 +21,8 @@ const auth = (...requiredRoles: TUserRole[]) => {
       config.jwt_access_secret as string,
     ) as JwtPayload;
     const { userId } = decoded;
-    console.log(userId);
-
     // checking if the user exsist in db:
     const user = await User.findById(userId);
-    console.log(user);
 
     if (!user) {
       throw new AppError(StatusCodes.NOT_FOUND, 'This user is not found!');

@@ -1,4 +1,6 @@
+import { StatusCodes } from 'http-status-codes';
 import QueryBuilder from '../../builder/QueryBuilder';
+import AppError from '../../errors/AppError';
 import { BlogSearchableFields } from './blog.constant';
 import { TBlog } from './blog.interface';
 import Blog from './blog.model';
@@ -27,7 +29,16 @@ const deleteBlogFromDB = async (id: string) => {
   return result;
 };
 const updateBlogIntoDB = async (id: string, payload: Partial<TBlog>) => {
-  const result = await Blog.findByIdAndUpdate(id, payload);
+  const { author, ...remainingData } = payload;
+  if (Object.keys(remainingData).length === 0) {
+    throw new AppError(StatusCodes.BAD_REQUEST, "Sorry, Can't update!");
+  }
+  const result = await Blog.findByIdAndUpdate(id, remainingData, {
+    new: true,
+    runValidators: true,
+  })
+    .populate('author')
+    .select('_id title content author');
   return result;
 };
 export const BlogServices = {

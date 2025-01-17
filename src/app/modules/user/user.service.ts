@@ -10,6 +10,18 @@ const createUserIntoDB = async (payload: TUser) => {
   const result = await User.create(payload);
   return result;
 };
+const updateUserIntoDB = async (id: string, payload: Partial<TUser>) => {
+  const result = await User.findByIdAndUpdate(id, payload, { new: true });
+  return result;
+};
+const getAllUserfromDB = async () => {
+  const result = await User.find();
+  return result;
+};
+const getSingleUserfromDB = async (id: string) => {
+  const result = await User.findById(id);
+  return result;
+};
 const loginDBUser = async (payload: TUser) => {
   // checking if the user exsist in db:
   const user = await User.findOne({ email: payload?.email }).select(
@@ -41,4 +53,7 @@ const loginDBUser = async (payload: TUser) => {
 export const UserServices = {
   createUserIntoDB,
   loginDBUser,
+  updateUserIntoDB,
+  getAllUserfromDB,
+  getSingleUserfromDB,
 };
