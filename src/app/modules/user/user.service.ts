@@ -10,7 +10,7 @@ const createUserIntoDB = async (payload: TUser) => {
   const result = await User.create(payload);
   return result;
 };
-const updateUserIntoDB = async (id: string, payload: Partial<TUser>) => {
+const blockUserIntoDB = async (id: string, payload: Partial<TUser>) => {
   const result = await User.findByIdAndUpdate(id, payload, { new: true });
   return result;
 };
@@ -53,7 +53,7 @@ const loginDBUser = async (payload: TUser) => {
 export const UserServices = {
   createUserIntoDB,
   loginDBUser,
-  updateUserIntoDB,
+  blockUserIntoDB,
   getAllUserfromDB,
   getSingleUserfromDB,
 };

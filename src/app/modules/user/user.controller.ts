@@ -1,6 +1,5 @@
 import { StatusCodes } from 'http-status-codes';
 import { v4 as uuidv4 } from 'uuid';
-import AppError from '../../errors/AppError';
 import catchAsync from '../../utils/catchAsync';
 import sendResponse from '../../utils/sendResponse';
 import User from './user.model';
@@ -21,41 +20,26 @@ const createUser = catchAsync(async (req, res) => {
     },
   });
 });
-const updateUser = catchAsync(async (req, res) => {
-  const { id } = req.params;
-  const userDataFromDB = await User.findById(id);
-  console.log('userDataFromDB', userDataFromDB);
+const blockUser = catchAsync(async (req, res) => {
+  const { userId } = req.params;
+  const userDataFromDB = await User.findById(userId);
+  console.log('userDataFromDB', userDataFromDB, userId);
   const userDataFromToken = req.user;
   console.log('userDataFromToken', userDataFromToken);
   const { isBlocked, ...remainingData } = req.body;
   console.log(req.body);
   console.log('isBlocked', isBlocked);
   console.log('remainingData', remainingData);
-  if (isBlocked && userDataFromToken?.userRole === 'user') {
-    throw new AppError(StatusCodes.UNAUTHORIZED, "You aren't authorized");
-  }
-  // if user is admin: only update isBlocked field
-  if (isBlocked && userDataFromToken?.userRole === 'admin') {
-    const result = await UserServices.updateUserIntoDB(id, {
-      isBlocked: isBlocked,
-    });
-    sendResponse(res, {
-      statusCode: StatusCodes.OK,
-      success: true,
-      message: 'User status is updated succesfully',
-      data: result,
-    });
-  }
-  // if user is user: update anything except isBlocked field
-  if (!isBlocked && userDataFromToken?.userRole === 'user') {
-    const result = await UserServices.updateUserIntoDB(id, remainingData);
-    sendResponse(res, {
-      statusCode: StatusCodes.CREATED,
-      success: true,
-      message: 'User updated succesfully',
-      data: result,
-    });
-  }
+
+  const result = await UserServices.blockUserIntoDB(userId, {
+    isBlocked: isBlocked,
+  });
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: 'User status is updated succesfully',
+    data: result,
+  });
 });
 const getAllUser = catchAsync(async (req, res) => {
   const result = await UserServices.getAllUserfromDB();
@@ -89,7 +73,7 @@ const loginUser = catchAsync(async (req, res) => {
 export const UserController = {
   createUser,
   loginUser,
-  updateUser,
+  blockUser,
   getAllUser,
   getSingleUser,
 };

@@ -12,7 +12,7 @@ const auth = (...requiredRoles: TUserRole[]) => {
     const token = req.headers.authorization;
     // check if the token is sent from the client
     if (!token) {
-      throw new AppError(StatusCodes.UNAUTHORIZED, 'You are not authorized!');
+      throw new AppError(StatusCodes.UNAUTHORIZED, 'Login first!');
     }
 
     // check if the token is valid:

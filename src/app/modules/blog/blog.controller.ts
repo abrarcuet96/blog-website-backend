@@ -27,6 +27,16 @@ const createBlog = catchAsync(async (req, res) => {
 });
 const getAllBlogs = catchAsync(async (req, res) => {
   const result = await BlogServices.getAllBlogsFromDB(req.query);
+  console.log(result);
+
+  if (result.length === 0) {
+    sendResponse(res, {
+      success: true,
+      statusCode: StatusCodes.NO_CONTENT,
+      message: 'No Blogs',
+      data: result,
+    });
+  }
   sendResponse(res, {
     success: true,
     statusCode: StatusCodes.OK,
@@ -73,7 +83,10 @@ const deleteBlog = catchAsync(async (req, res) => {
   if (!blogData) {
     throw new AppError(StatusCodes.UNAUTHORIZED, 'This blog does not exist');
   }
-  if (userData?.userId !== blogData?.author?._id.toString()) {
+  if (
+    userData?.userRole !== 'admin' &&
+    userData?.userId !== blogData?.author?._id.toString()
+  ) {
     throw new AppError(StatusCodes.UNAUTHORIZED, 'You are not authorized');
   }
 
