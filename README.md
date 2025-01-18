@@ -2,12 +2,12 @@
 
 Welcome to the **Blog Website Backend** repository. This is a robust and scalable backend application built to support a blog website. It provides essential functionalities such as user authentication, blog management, and error handling while following best practices in software development.
 
-## Project Resources
+### Project Resources
 ## Live Deployment
-- **URL**: [To Be Added]
+- **Live Deployment Link**: [To Be Added]
 - **Project Overview Video**: [To Be Added]
-- 
-## Project Overview
+  
+### Project Overview
 The Blog Website Backend is a server-side application designed for managing blog-related operations such as creating, reading, updating, and deleting blog posts. It also includes user management with role-based access control.
 
 ### Admin Login Credentials
